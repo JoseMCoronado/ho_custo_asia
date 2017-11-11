@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record model="ir.model.fields" id="x_so_sc_notes">
+      <field name="domain">[]</field>
+      <field name="field_description">Supply Chain Notes</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order" />
+      <field name="name">x_sc_notes</field>
+      <field name="on_delete">set null</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">text</field>
+    </record>
+    <record model="ir.model.fields" id="x_po_sc_notes">
+      <field name="domain">[]</field>
+      <field name="field_description">Supply Chain Notes</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">purchase.order</field>
+      <field name="model_id" ref="purchase.model_purchase_order" />
+      <field name="name">x_sc_notes</field>
+      <field name="on_delete">set null</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">text</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_sc_notes">
+      <field name="domain">[]</field>
+      <field name="field_description">Order Notes</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_sc_notes</field>
+      <field name="on_delete">set null</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">text</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_hold">
+      <field name="domain">[]</field>
+      <field name="field_description">On Hold</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order" />
+      <field name="name">x_hold</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_acc_hold">
+      <field name="domain">[]</field>
+      <field name="field_description">Accounting Hold</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order" />
+      <field name="name">x_acc_hold</field>
+      <field name="on_delete">set null</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_hold_reason">
+      <field name="domain">[]</field>
+      <field name="field_description">Hold Reason</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order" />
+      <field name="name">x_hold_reason</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">text</field>
+    </record>
+    <record model="ir.model.fields" id="x_hr_hold_reason">
+      <field name="domain">[]</field>
+      <field name="field_description">Hold Reason</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_hold_reason_wizard</field>
+      <field name="model_id" ref="ho_custo_asia.x_hold_reason_wizard" />
+      <field name="name">x_hold_reason</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">text</field>
+    </record>
+    <record model="ir.model.fields" id="x_hr_so_id">
+      <field name="domain">[]</field>
+      <field name="field_description">Sale Order</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_hold_reason_wizard</field>
+      <field name="model_id" ref="ho_custo_asia.x_hold_reason_wizard" />
+      <field name="name">x_so_id</field>
+      <field name="on_delete">set null</field>
+      <field name="relation">sale.order</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_dns">
+      <field name="domain">[]</field>
+      <field name="field_description">Do Not Ship</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_dns</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <!--ELEMENT 1.5-->
+    <record model="ir.model.fields" id="x_so_state">
+      <field name="domain">[]</field>
+      <field name="field_description">State</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order" />
+      <field name="name">x_state</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="selection">[['draft', 'Quotation'], ['sent', 'Quotation Sent'], ['awaiting', 'Awaiting Approval'], ['sale', 'Sale Order'], ['done', 'Done'], ['cancel', 'Cancelled']]</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="x_acc_origin">
+      <field name="compute"><![CDATA[
+for record in self:
+  sale = self.env['sale.order'].search([('name','=',record.origin)])
+  record['x_origin'] = sale and sale[0] or False
+        ]]></field>
+      <field name="domain">[]</field>
+      <field name="field_description">Sale Order</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">account.invoice</field>
+      <field name="model_id" ref="account.model_account_invoice" />
+      <field name="name">x_origin</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="relation">sale.order</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="x_freight_booked">
+      <field name="domain">[]</field>
+      <field name="field_description">Freight Booked</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_freight_booked</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_display_so">
+      <field name="domain">[]</field>
+      <field name="field_description">Display on Sale Order</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.incoterms</field>
+      <field name="model_id" ref="stock.model_stock_incoterms"/>
+      <field name="name">x_display_so</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_so_incoterms">
+      <field name="compute"><![CDATA[
+for record in self:
+  if record.sale_id:
+      record['x_incoterm_id'] = record.sale_id.incoterm
+  elif record.purchase_id:
+      record['x_incoterm_id'] = record.purchase_id.incoterm_id
+        ]]></field>
+      <field name="domain">[]</field>
+      <field name="field_description">Delivery Method</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking" />
+      <field name="name">x_incoterm_id</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="relation">stock.incoterms</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="downpayment_classification">
+      <field name="compute"><![CDATA[
+for record in self:
+  for l in record.invoice_line_ids:
+    if l.product_id.name == 'Down payment' and l.quantity > 0:
+      record['x_downpayment'] = True
+        ]]></field>
+      <field name="depends">state,number</field>
+      <field name="domain">[]</field>
+      <field name="field_description">Downpayment Invoice</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">account.invoice</field>
+      <field name="model_id" ref="account.model_account_invoice"/>
+      <field name="name">x_downpayment</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_sales_request">
+      <field name="domain">[]</field>
+      <field name="field_description">Cust. Man. Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_sales_request</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">datetime</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_internal_request">
+      <field name="domain">[]</field>
+      <field name="field_description">Internal Request</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_internal_request</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">date</field>
+    </record>
+    <record model="ir.model.fields" id="x_ship_date">
+      <field name="domain">[]</field>
+      <field name="field_description">Est. Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_ship_date</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">date</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_last_ship">
+      <field name="domain">[]</field>
+      <field name="field_description">Last Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_last_ship</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">datetime</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_internal_last">
+      <field name="domain">[]</field>
+      <field name="field_description">Last Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_internal_last_ship</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">datetime</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_sales_request">
+      <field name="compute"><![CDATA[
+for record in self:
+  if record.sale_id:
+    record['x_sales_request'] = record.sale_id.x_sales_request
+        ]]></field>
+      <field name="depends">origin</field>
+      <field name="domain">[]</field>
+      <field name="field_description">Customer Mandated</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_sales_request</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">date</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_last_ship">
+      <field name="compute"><![CDATA[
+for record in self:
+  if record.sale_id:
+      record['x_last_ship'] = record.sale_id.x_last_ship
+        ]]></field>
+      <field name="depends">origin</field>
+      <field name="domain">[]</field>
+      <field name="field_description">Last Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_last_ship</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">datetime</field>
+    </record>
+    <record model="ir.model.fields" id="x_pol_line_volume">
+      <field name="domain">[]</field>
+      <field name="field_description">Total CBM</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="compute"><![CDATA[
+for record in self:
+  record['x_line_volume'] = record.product_id.x_cubic_meters * record.product_qty
+        ]]></field>
+      <field name="model">purchase.order.line</field>
+      <field name="model_id" ref="purchase.model_purchase_order_line"/>
+      <field name="name">x_line_volume</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="x_po_volume_total">
+      <field name="domain">[]</field>
+      <field name="field_description">CBM Total</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="compute"><![CDATA[
+for record in self:
+  total=0
+  for l in record.order_line:
+       total += l.x_line_volume
+  record['x_volume_total'] = total
+        ]]></field>
+      <field name="model">purchase.order</field>
+      <field name="model_id" ref="purchase.model_purchase_order"/>
+      <field name="name">x_volume_total</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_opt_out">
+      <field name="domain">[]</field>
+      <field name="field_description">Opt Out</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_opt_out</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_carrier_name">
+      <field name="domain">[]</field>
+      <field name="field_description">Carrier Name</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_carrier</field>
+      <field name="model_id" ref="x_carrier"/>
+      <field name="name">x_name</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">char</field>
+    </record>
+    <record model="ir.model.fields" id="x_carrier_link">
+      <field name="domain">[]</field>
+      <field name="field_description">Carrier Link</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_carrier</field>
+      <field name="model_id" ref="x_carrier"/>
+      <field name="name">x_link</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">char</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_carrier">
+      <field name="domain">[]</field>
+      <field name="field_description">Carrier</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_carrier_id</field>
+      <field name="on_delete">set null</field>
+      <field name="relation">x_carrier</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_carrier_tracking">
+      <field name="domain">[]</field>
+      <field name="field_description">Tracking No.</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_carrier_tracking</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">char</field>
+    </record>
+    <record model="ir.model.fields" id="x_sp_carrier_tracking_link">
+      <field name="domain">[]</field>
+      <field name="depends"></field>
+      <field name="compute"><![CDATA[
+for record in self:
+  if record.x_carrier_tracking and record.x_carrier_id and record.x_carrier_id.x_link:
+    record['x_carrier_tracking_link'] = record.x_carrier_id.x_link + record.x_carrier_tracking
+        ]]></field>
+      <field name="field_description">Tracking Link</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">stock.picking</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="name">x_carrier_tracking_link</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">char</field>
+    </record>
+    <record model="ir.model.fields" id="x_so_purch_approved">
+      <field name="domain">[]</field>
+      <field name="field_description">Approved for Purchase</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_purch_ready</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_inv_pay_status">
+      <field name="domain">[]</field>
+      <field name="depends">order_line.invoice_lines,order_line.invoice_lines.invoice_id.residual</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  invoices = record.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'] and r.state  not in ['draft','cancel'])
+  if invoices:
+      amounts = invoices.mapped(lambda r: r.amount_total_signed)
+      residualamount = invoices.mapped(lambda r: r.residual)
+      invoiced = sum(map(float,amounts))
+      dueamount = sum(map(float,residualamount))
+      if record.amount_total == invoiced and dueamount == 0:
+           record['x_inv_pay_status'] = 'pif'
+      else:
+          record['x_inv_pay_status'] = 'npif'
+  else:
+      record['x_inv_pay_status'] = 'npif'
+        ]]></field>
+      <field name="field_description">Invoice Payment Status</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_inv_pay_status</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="selection">[['npif', 'Not Paid'], ['pif', 'Paid in Full']]</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="x_check_so">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  record['x_check'] = record.env.user.has_group('stock.group_stock_manager')
+        ]]></field>
+      <field name="field_description">Check Group</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_check</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">boolean</field>
+    </record>
+    <record model="ir.model.fields" id="x_product_type">
+      <field name="domain">[]</field>
+      <field name="field_description">Product Type</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order.line</field>
+      <field name="model_id" ref="sale.model_sale_order_line"/>
+      <field name="name">x_product_type</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="related">product_id.product_tmpl_id.type</field>
+      <field name="selectable" eval="True"/>
+      <field name="selection">[['consu', 'Consumable'], ['service', 'Service'], ['product', 'Stockable Product']]</field>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="x_transfer_status">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  if record.picking_ids:
+      if any(t.state != 'done' for t in record.picking_ids):
+          record['x_transfer_status'] = 'progress'
+      else:
+          record['x_transfer_status'] = 'completed'
+  else:
+      record['x_transfer_status'] = 'none'
+        ]]></field>
+      <field name="field_description">Transfer Status</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_transfer_status</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="selection">[['progress','In Progress'],['completed','Completed'],['none','No Transfer']]</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="x_outstanding_balance">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  invoice_total = 0
+  for inv in record.invoice_ids:
+      if inv.state in ['open','paid']:
+          invoice_total += (inv.amount_total - inv.residual)
+  record['x_outstanding_balance'] = (invoice_total - record.amount_total)*-1
+        ]]></field>
+      <field name="field_description">Balance Outstanding</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_outstanding_balance</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="x_approval_date">
+      <field name="domain">[]</field>
+      <field name="field_description">Approval Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_approval_date</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">date</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwiz_product_id">
+      <field name="domain">[('sale_ok', '=', True)]</field>
+      <field name="field_description">Product Template</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">x_product_id</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="relation">product.template</field>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwiz_product_qty">
+      <field name="domain">[]</field>
+      <field name="field_description">Quantity</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">x_product_qty</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwiz_product_attributes">
+      <field name="domain">[]</field>
+      <field name="field_description">Attribute Value</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">x_product_attribute_ids</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="relation">x_line_wizard_line</field>
+      <field name="ttype">many2many</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwizl_product_id">
+      <field name="domain">[('sale_ok', '=', True)]</field>
+      <field name="field_description">Product Template</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard_line</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard_line"/>
+      <field name="name">x_attribute_product_id</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="relation">product.template</field>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwizl_product_attribute">
+      <field name="domain">[]</field>
+      <field name="field_description">Attribute</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard_line</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard_line"/>
+      <field name="name">x_product_attribute</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="relation">product.attribute</field>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="field_olwizl_product_attribute_val">
+      <field name="domain">[]</field>
+      <field name="field_description">Attribute Value</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">x_line_wizard_line</field>
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard_line"/>
+      <field name="name">x_product_attribute_value</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="relation">product.attribute.value</field>
+      <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="x_customer_type">
+      <field name="domain">[]</field>
+      <field name="field_description">Customer Type</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">res.partner</field>
+      <field name="model_id" ref="base.model_res_partner"/>
+      <field name="name">x_customer_type</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="selection">[['end user','End User'],['interior designer','Interior Designer'],['wholesale dealer','Wholesale Dealer'],['contract','Contract'],['hospitality','Hospitality'],['architect','Architect'],['designer','Designer'],['wholesale online','Wholesale Online'],['other','Other']]</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="x_customer_type_lead">
+      <field name="domain">[]</field>
+      <field name="field_description">Customer Type</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">crm.lead</field>
+      <field name="model_id" ref="crm.model_crm_lead"/>
+      <field name="name">x_customer_type</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="selection">[['end user','End User'],['interior designer','Interior Designer'],['wholesale dealer','Wholesale Dealer'],['contract','Contract'],['hospitality','Hospitality'],['architect','Architect'],['designer','Designer'],['wholesale online','Wholesale Online'],['other','Other']]</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">selection</field>
+    </record>
+    <record model="ir.model.fields" id="field_so_line_volume">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  record['x_line_volume'] = record.product_id.x_cubic_meters * record.product_uom_qty
+        ]]></field>
+      <field name="field_description">Total CBM</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order.line</field>
+      <field name="model_id" ref="sale.model_sale_order_line"/>
+      <field name="name">x_line_volume</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_so_line_volume">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  record['x_line_volume'] = record.product_id.x_cubic_meters * record.product_uom_qty
+        ]]></field>
+      <field name="field_description">Total CBM</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order.line</field>
+      <field name="model_id" ref="sale.model_sale_order_line"/>
+      <field name="name">x_line_volume</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_so_line_qty_available">
+      <field name="domain">[]</field>
+      <field name="field_description">Quantity Available</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order.line</field>
+      <field name="model_id" ref="sale.model_sale_order_line"/>
+      <field name="name">x_qty_available</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="related">product_id.qty_available</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_so_volume_tot">
+      <field name="domain">[]</field>
+      <field name="compute"><![CDATA[
+for record in self:
+  total=0
+  for l in record.order_line:
+       total += l.x_line_volume
+  record['x_volume_total'] = total
+        ]]></field>
+      <field name="field_description">Total CBM</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">sale.order</field>
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">x_volume_total</field>
+      <field name="on_delete">set null</field>
+      <field name="readonly" eval="True"/>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="False"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_po_ship_date">
+      <field name="domain">[]</field>
+      <field name="field_description">Est. Ship Date</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">purchase.order</field>
+      <field name="model_id" ref="purchase.model_purchase_order"/>
+      <field name="name">x_ship_date</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">date</field>
+    </record>
+    <record model="ir.model.fields" id="field_dimension_w">
+      <field name="domain">[]</field>
+      <field name="field_description">Width (MM)</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">product.product</field>
+      <field name="model_id" ref="sale.model_product_product"/>
+      <field name="name">x_dimension_w</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_dimension_h">
+      <field name="domain">[]</field>
+      <field name="field_description">Height (MM)</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">product.product</field>
+      <field name="model_id" ref="sale.model_product_product"/>
+      <field name="name">x_dimension_h</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_dimension_d">
+      <field name="domain">[]</field>
+      <field name="field_description">Depth (MM)</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">product.product</field>
+      <field name="model_id" ref="sale.model_product_product"/>
+      <field name="name">x_dimension_d</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="field_dimension_cubic">
+      <field name="domain">[]</field>
+      <field name="field_description">Cubic Meters (CM)</field>
+      <field name="groups" eval="[(6, 0, [])]"/>
+      <field name="model">product.product</field>
+      <field name="model_id" ref="sale.model_product_product"/>
+      <field name="name">x_cubic_meters</field>
+      <field name="on_delete">set null</field>
+      <field name="selectable" eval="True"/>
+      <field name="state">manual</field>
+      <field name="store" eval="True"/>
+      <field name="ttype">float</field>
+    </record>
+  </data>
+</odoo>

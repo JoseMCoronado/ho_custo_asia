@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="x_hold_reason_form">
+      <field name="name">x_jos.x_hold_reason.form</field>
+      <field name="model">x_hold_reason_wizard</field>
+      <field name="mode">primary</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="priority">15</field>
+      <field name="arch" type="xml">
+        <form>
+              <strong><p>Please write reason for not shipping the order below. Thanks!</p></strong>
+              <group>
+                  <field name="x_hold_reason"/>
+                  <field name="x_so_id" invisible="1"/>
+              </group>
+              <footer>
+                  <button string="Hold" type="action" name="%(action_sales_hold)d" class="oe_highlight"/> or
+                  <button string="Cancel" special="cancel" class="oe_link"/>
+              </footer>
+          </form>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="sp_to_schedule">
+      <field name="name">x_jos.stock.picking.toschedule.tree</field>
+      <field name="model">stock.picking</field>
+      <field name="mode">primary</field>
+      <field name="type">tree</field>
+      <field name="priority">16</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="arch" type="xml">
+          <tree string="To Schedule Pickings">
+            <field name="name"/>
+            <field name="location_id"/>
+            <field name="location_dest_id"/>
+            <field name="x_sales_request"/>
+            <field name="x_internal_request"/>
+            <field name="partner_id"/>
+            <field name="date" invisible="1"/>
+            <field name="scheduled_date" invisible="1"/>
+            <field name="origin"/>
+            <field name="group_id" invisible="1"/>
+            <field name="backorder_id"/>
+            <field name="state"/>
+            <field name="priority" invisible="1"/>
+            <field name="picking_type_id" invisible="1"/>
+          </tree>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="so_not_shipped_open_balance">
+      <field name="name">x_jos.sale.order.opennotshipped.tree</field>
+      <field name="model">sale.order</field>
+      <field name="mode">primary</field>
+      <field name="type">tree</field>
+      <field name="priority">16</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="arch" type="xml">
+          <tree string="Not Shipped with Open Balances">
+            <field name="name"/>
+            <field name="date_order"/>
+            <field name="partner_id"/>
+            <field name="user_id"/>
+            <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+            <field name="invoice_status"/>
+            <field name="state" invisible="1"/>
+          </tree>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="view_my_orders">
+      <field name="name">x_jos.my.sale.order.tree</field>
+      <field name="model">sale.order</field>
+      <field name="mode">primary</field>
+      <field name="type">tree</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="arch" type="xml">
+          <tree string="My Sale Orders">
+            <field name="name"/>
+            <field name="x_hold"/>
+            <field name="x_acc_hold"/>
+            <field name="confirmation_date" string="Order Date"/>
+            <field name="requested_date" string="Est. Ship Date"/>
+            <field name="partner_id"/>
+            <field name="user_id"/>
+            <field name="amount_total"/>
+            <field name="x_outstanding_balance"/>
+            <field name="x_transfer_status"/>
+            <field name="state" invisible="1"/>
+            <field name="x_state" invisible="1"/>
+          </tree>
+      </field>
+      <field name="priority">16</field>
+    </record>
+    <record model="ir.ui.view" id="view_my_completed_orders">
+      <field name="name">x_jos.my.completed.sale.order.tree</field>
+      <field name="model">sale.order</field>
+      <field name="mode">primary</field>
+      <field name="type">tree</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="arch" type="xml">
+          <tree string="My Completed Sale Orders">
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="requested_date" string="Est. Ship Date"/>
+            <field name="user_id"/>
+            <field name="amount_total"/>
+            <field name="amount_untaxed" string="Subtotal"/>
+            <field name="x_outstanding_balance"/>
+            <field name="x_state"/>
+            <field name="state" invisible="1"/>
+          </tree>
+      </field>
+      <field name="priority">16</field>
+    </record>
+    <record model="ir.ui.view" id="view_my_orders_awaiting">
+      <field name="name">x_jos.my.sale.order.awaiting.tree</field>
+      <field name="model">sale.order</field>
+      <field name="mode">primary</field>
+      <field name="type">tree</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="arch" type="xml">
+          <tree string="My Sale Orders Awaiting Approval">
+            <field name="name"/>
+            <field name="x_approval_date"/>
+            <field name="requested_date" string="Est. Ship Date"/>
+            <field name="x_last_ship"/>
+            <field name="x_purch_ready"/>
+            <field name="partner_id"/>
+            <field name="amount_total"/>
+            <field name="x_outstanding_balance"/>
+            <field name="state" invisible="1"/>
+            <field name="x_state" invisible="1"/>
+          </tree>
+      </field>
+      <field name="priority">16</field>
+    </record>
+    <record model="ir.ui.view" id="view_harbour_so_line_wizard">
+      <field name="name">x_jos.so.line.wizard.form</field>
+      <field name="model">x_line_wizard</field>
+      <field name="mode">primary</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="priority">15</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="x_product_id" required="True" options="{'no_create': True, 'no_open': True}"/>
+                <field name="x_product_attribute_ids" widget="one2many_list" options="{'no_create_edit': True}" context="{'show_attribute': False}">
+                    <tree string="Variants" editable="bottom">
+                        <field name="x_attribute_product_id" invisible="1"/>
+                        <field name="x_product_attribute" readonly="1" options="{'no_create_edit': True}" required="True"/>
+                        <field name="x_product_attribute_value" options="{'no_create_edit': True}" domain="[('attribute_id', '=', x_product_attribute)]" context="{'default_attribute_id': x_product_attribute}" required="True"/>
+                    </tree>
+                </field>
+                <field name="x_product_qty" required="True"/>
+            </group>
+            <footer>
+                <button string=" Add " type="action" name="%(action_add_so_lines)d" class="oe_highlight"/> or
+                <button string="Cancel" special="cancel" class="oe_link"/>
+            </footer>
+        </form>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="view_harbour_po_line_wizard">
+      <field name="name">x_jos.po.line.wizard.form</field>
+      <field name="model">x_line_wizard</field>
+      <field name="mode">primary</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="priority">15</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="x_product_id" required="True" options="{'no_create': True, 'no_open': True}"/>
+                <field name="x_product_attribute_ids" widget="one2many_list" options="{'no_create_edit': True}" context="{'show_attribute': False}">
+                    <tree string="Variants" editable="bottom">
+                        <field name="x_attribute_product_id" invisible="1"/>
+                        <field name="x_product_attribute" readonly="1" options="{'no_create_edit': True}" required="True"/>
+                        <field name="x_product_attribute_value" options="{'no_create_edit': True}" domain="[('attribute_id', '=', x_product_attribute)]" context="{'default_attribute_id': x_product_attribute}" required="True"/>
+
+                    </tree>
+                </field>
+                <field name="x_product_qty" required="True"/>
+            </group>
+            <footer>
+                <button string=" Add " type="action" name="%(action_add_po_lines)d" class="oe_highlight"/> or
+                <button string="Cancel" special="cancel" class="oe_link"/>
+            </footer>
+        </form>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="view_harbour_sp_line_wizard">
+      <field name="name">x_jos.sp.line.wizard.form</field>
+      <field name="model">x_line_wizard</field>
+      <field name="mode">primary</field>
+      <field name="inherit_id" eval="False"/>
+      <field name="priority">15</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="x_product_id" required="True" options="{'no_create': True, 'no_open': True}"/>
+                <field name="x_product_attribute_ids" widget="one2many_list" options="{'no_create_edit': True}" context="{'show_attribute': False}">
+                    <tree string="Variants" editable="bottom">
+                        <field name="x_attribute_product_id" invisible="1"/>
+                        <field name="x_product_attribute" readonly="1" options="{'no_create_edit': True}" required="True"/>
+                        <field name="x_product_attribute_value" options="{'no_create_edit': True}" domain="[('attribute_id', '=', x_product_attribute)]" context="{'default_attribute_id': x_product_attribute}" required="True"/>
+
+                    </tree>
+                </field>
+                <field name="x_product_qty" required="True"/>
+            </group>
+            <footer>
+                <button string=" Add " type="action" name="%(action_add_sp_lines)d" class="oe_highlight"/> or
+                <button string="Cancel" special="cancel" class="oe_link"/>
+            </footer>
+        </form>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!--ELEMENT 1.1-->
+    <record model="ir.ui.view" id="so_note">
+      <field name="name">x_jos.sale.order.form.mod</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//field[@name='note']" position="attributes">
+            <attribute name="placeholder">Order Note...</attribute>
+          </xpath>
+          <xpath expr="//group[@name='sale_shipping']" position="inside">
+                  <field name="x_sc_notes" placeholder="e.g. 6 flights of stairs, need 4 people, only 2 hour window..."/>
+          </xpath>
+          <!--ELEMENT 1.4-->
+          <xpath expr="//div[@name='button_box']" position="inside">
+              <button attrs="{'invisible': [('state', 'not in', ('sale'))]}" name="%(action_pre_sales_hold)d" type="action" class="oe_stat_button" icon="fa-hand-paper-o">
+                  <strong>SALES DNS</strong>
+                  <field string="Sales Hold" name="x_hold" invisible="1"/>
+              </button>
+              <button attrs="{'invisible': [('x_state', 'not in', ('awaiting','sale'))]}" name="%(action_acc_hold)d" type="action" groups="account.group_account_user" class="oe_stat_button" icon="fa-hand-paper-o">
+                  <strong>ACCT DNS</strong>
+                  <field string="Accounting Hold" name="x_acc_hold" invisible="1" />
+              </button>
+          </xpath>
+          <xpath expr="//div[@class='oe_title']" position="before">
+              <div attrs="{'invisible':[('x_hold','!=',True),('x_acc_hold','!=',True)]}" class="row" style="text-align:center;background-color:red;">
+                <div>
+                  <h2 style="color:white;">
+                    <strong>DO NOT SHIP ORDER - </strong>
+                    <strong attrs="{'invisible':[('x_hold','!=',True)]}">SALES</strong>
+                    <strong attrs="{'invisible':['|',('x_hold','!=',True),('x_acc_hold','!=',True)]}"> AND </strong>
+                    <strong attrs="{'invisible':[('x_acc_hold','!=',True)]}">ACCOUNTING</strong>
+                  </h2>
+                </div>
+                <div>
+                  <h4 style="color:white;">
+                  <strong attrs="{'invisible':[('x_hold','!=',True)]}">SALES DNS REASON: <field name="x_hold_reason"/></strong>
+                </h4>
+                </div>
+              </div>
+          </xpath>
+          <!--ELEMENT 1.5-->
+          <xpath expr="//field[@name='state']" position="replace">
+             <field name="state" widget="statusbar" invisible="1" statusbar_visible="draft,sent,sale,done"/>
+             <field name="x_state" widget="statusbar" statusbar_visible="draft,sent,awaiting,sale,done"/>
+          </xpath>
+          <!--ELEMENT 1.2 & 1.6-->
+          <xpath expr="//button[@name='action_confirm']" position="before">
+              <button name="%(action_send_awaiting)d"  attrs="{'invisible': [('x_state', 'not in', ['sent'])]}" string="Confirm for Approval" class="btn-primary o_sale_confirm" type="action"/>
+              <button name="%(action_send_awaiting)d" attrs="{'invisible': [('x_state', 'not in', ['draft'])]}" string="Confirm for Approval" class="o_sale_confirm" type="action"/>
+          </xpath>
+          <xpath expr="(//button[@name='action_confirm'])[1]" position="attributes">
+              <attribute name="groups">base.group_sale_manager</attribute>
+              <attribute name="name">%(action_transfer_so_notes)d</attribute>
+              <attribute name="type">action</attribute>
+          </xpath>
+          <xpath expr="//descendant::button[@name='action_confirm'][1]" position="attributes">
+              <attribute name="groups">base.group_sale_manager</attribute>
+              <attribute name="name">%(action_transfer_so_notes)d</attribute>
+              <attribute name="type">action</attribute>
+          </xpath>
+          <xpath expr="//field[@name='requested_date']" position="replace"/>
+          <xpath expr="//field[@name='confirmation_date']" position="after">
+              <field name="requested_date" attrs="{'readonly':[('x_check','=',False),('state','in',['sale','done','cancel'])]}" string="Est. Ship Date"/>
+          </xpath>
+          <!--ELEMENT 3.1-->
+          <xpath expr="//field[@name='validity_date']" position="after">
+            <field name="x_opt_out" string="Exp. Reminder Opt Out" attrs="{'invisible':[('state','in',['sale','done'])]}"/>
+          </xpath>
+          <xpath expr="//field[@name='commitment_date']" position="before">
+            <field name="x_check" invisible="1"/>
+            <field name="x_sales_request" attrs="{'readonly':[('x_check','=',False),('state','in',['sale','done','cancel'])]}"/>
+            <field name="x_last_ship" attrs="{'readonly':[('x_check','=',False),('state','in',['sale','done','cancel'])]}"/>
+          </xpath>
+          <xpath expr="//field[@name='picking_policy']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='commitment_date']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='effective_date']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='quote_viewed']/.." position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+            <attribute name="string">Tax Status</attribute>
+          </xpath>
+          <xpath expr="//group[@name='sales_person']/../.." position="attributes">
+            <attribute name="string">Order Details</attribute>
+          </xpath>
+          <xpath expr="//field[@name='payment_term_id']/.." position="inside">
+            <field name="x_purch_ready"/>
+          </xpath>
+          <xpath expr="//field[@name='order_line']/tree//field[@name='route_id']" position="before">
+            <field name="x_product_type" invisible="1"/>
+          </xpath>
+          <xpath expr="//field[@name='order_line']/tree//field[@name='route_id']" position="attributes">
+            <attribute name="attrs">{'required':[('x_product_type','not in', ['service'])]}</attribute>
+          </xpath>
+          <xpath expr="//field[@name='order_line']/form//field[@name='route_id']" position="before">
+            <field name="x_product_type" invisible="1"/>
+          </xpath>
+          <xpath expr="//field[@name='order_line']/form//field[@name='route_id']" position="attributes">
+            <attribute name="attrs">{'required':[('x_product_type','not in', ['service'])]}</attribute>
+          </xpath>
+          <xpath expr="//page/field[@name='order_line']/tree/field[@name='name']" position="after">
+           <field name="x_line_volume"/>
+           <field name="x_qty_available"/>
+         </xpath>
+         <xpath expr="//field[@name='payment_term_id']" position="after">
+              <field name="x_volume_total"/>
+         </xpath>
+        </data>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="web_note">
+      <field name="name">x_jos.website_quote.pricing.mod</field>
+      <field name="model"></field>
+      <field name="inherit_id" ref="website_quote.pricing"/>
+      <field name="arch" type="xml">
+          <xpath expr="//section[@id='terms']//h2" position="replace">
+            <h2 class="page-header">Order Note</h2>
+          </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <!--ELEMENT 1.2-->
+    <record model="ir.ui.view" id="po_form_mod">
+      <field name="name">x_jos.purchase.order.form.mod</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//button[@id='draft_confirm']" position="attributes">
+          <attribute name="name">%(action_transfer_po_notes)d</attribute>
+          <attribute name="type">action</attribute>
+        </xpath>
+        <xpath expr="//button[@id='bid_confirm']" position="attributes">
+          <attribute name="name">%(action_transfer_po_notes)d</attribute>
+          <attribute name="type">action</attribute>
+        </xpath>
+        <xpath expr="//notebook" position="inside">
+          <page string="Supply Chain Notes">
+              <group>
+                <field name="x_sc_notes" placeholder="e.g. 6 flights of stairs, need 4 people, only 2 hour window..."/>
+              </group>
+          </page>
+        </xpath>
+        <xpath expr="//field[@name='picking_type_id']" position="before">
+          <field name="x_ship_date" required="1"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="sp_form_mod">
+      <field name="name">x_jos.stock.picking.form.mod</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='partner_id']/../.." position="after">
+              <group>
+                <field name="x_sc_notes" placeholder="e.g. 6 flights of stairs, need 4 people, only 2 hour window..."/>
+              </group>
+        </xpath>
+        <!--ELEMENT 1.4-->
+        <xpath expr="//field[@name='partner_id']" position="after">
+          <field name="x_dns" invisible="1"/>
+        </xpath>
+        <xpath expr="//div[@name='button_box']" position="after">
+            <div attrs="{'invisible':[('x_dns','!=',True)]}" class="row" style="text-align:center;background-color:red;">
+              <div>
+                <h2 style="color:white;">
+                  <strong>DO NOT SHIP</strong>
+                </h2>
+              </div>
+            </div>
+        </xpath>
+        <!--ELEMENT 2.1-->
+        <xpath expr="//field[@name='location_dest_id']" position="after">
+          <field name="x_incoterm_id"/>
+          <field name="x_freight_booked"/>
+        </xpath>
+        <!--PHASE 1 ELEMENT-->
+        <xpath expr="//field[@name='scheduled_date']" position="before">
+          <field name="x_sales_request" attrs="{'invisible': [('x_sales_request', '=', False)]}"/>
+          <field name="x_internal_request" attrs="{'invisible': [('x_sales_request', '!=', False)]}"/>
+          <field name="x_internal_last_ship" attrs="{'invisible': [('x_last_ship', '!=', False)]}"/>
+          <field name="x_last_ship" attrs="{'invisible': [('x_last_ship', '=', False)]}"/>
+          <field name="x_ship_date"/>
+        </xpath>
+        <xpath expr="//field[@name='scheduled_date']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='priority']" position="replace"/>
+        <xpath expr="//field[@name='origin']" position="after">
+          <field name="sale_id" attrs="{'invisible': [('sale_id','=',False)]}"/>
+          <field name="purchase_id" attrs="{'invisible': [('purchase_id','=',False)]}"/>
+          <field name="priority"/>
+        </xpath>
+        <xpath expr="//field[@name='group_id']" position="after">
+          <field name="x_carrier_id"/>
+          <field name="x_carrier_tracking"/>
+          <field name="x_carrier_tracking_link" widget="url" attrs="{'invisible':[('x_carrier_tracking','=',False)]}"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="sp_tree_mod">
+      <field name="name">x_jos.stock.picking.tree.mod</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.vpicktree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="after">
+          <field name="x_dns"/>
+        </xpath>
+        <xpath expr="//field[@name='origin']" position="before">
+          <field name="x_ship_date"/>
+          <!--<field name="scheduled_date"/>-->
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <!--ELEMENT 1.7-->
+    <record model="ir.ui.view" id="acc_form_mod">
+      <field name="name">x_jos.account.invoice.form.mod</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='payment_term_id']" position="after">
+          <field name="x_origin"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <!--ELEMENT 2.2-->
+    <record model="ir.ui.view" id="si_form_mod">
+      <field name="name">x_jos.stock.incoterms.form.mod</field>
+      <field name="model">stock.incoterms</field>
+      <field name="inherit_id" ref="stock.stock_incoterms_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='code']" position="after">
+          <field name="x_display_so"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="so_incoterm_mod">
+      <field name="name">x_jos.sale.order.form.sale.stock.mod</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='incoterm']" position="replace">
+          <field name="incoterm" string="Delivery Method" domain="[('x_display_so','=',True)]" invisible="0" required="1"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <!--CALL ADDITTIONS-->
+    <record model="ir.ui.view" id="acc_invoice_tree_mod">
+      <field name="name">x_jos.account.invoice.tree.mod</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='residual_signed']" position="attributes">
+          <attribute name="sum">Total</attribute>
+        </xpath>
+        <xpath expr="//field[@name='amount_total_signed']" position="attributes">
+          <attribute name="sum">Total</attribute>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="purchase_order_form_mod">
+      <field name="name">x_jos.purchase.order.form.mod.p2</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='order_line']//field[@name='product_qty']" position="before">
+          <field name="x_line_volume"/>
+        </xpath>
+        <xpath expr="//field[@name='date_order']" position="after">
+          <field name="x_volume_total"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="so_tree_view_mod">
+      <field name="name">x_jos.sale.order.tree.mod</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='commitment_date']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='requested_date']" position="attributes">
+          <attribute name="string">Est. Ship Date</attribute>
+        </xpath>
+        <xpath expr="//field[@name='invoice_status']" position="after">
+          <field name="x_inv_pay_status"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="stock_return_lines_mod">
+      <field name="name">x_jos.return.lines.mod</field>
+      <field name="model">stock.return.picking</field>
+      <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='location_id']" position="attributes">
+          <attribute name="domain">[]</attribute>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="partner_fiscal_name">
+      <field name="name">x_jos.res.partner.form.fiscal.mod</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='property_account_position_id']" position="attributes">
+          <attribute name="string">Tax Status</attribute>
+        </xpath>
+        <xpath expr="//field[@name='website']" position="after">
+          <field name="x_customer_type"/>
+        </xpath>
+      </field>
+      <field name="priority">99</field>
+    </record>
+    <record model="ir.ui.view" id="line_wizard_so_button">
+      <field name="name">x_jos.sale.order.form.line.wizard.mod</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//*[@name='order_line']" position="before">
+                <button class="pull-right" name="%(action_open_so_line_wizard)d" string="Add Order Line" type="action" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
+        </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="line_wizard_po_button">
+      <field name="name">x_jos.purchase.order.form.line.wizard.mod</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_form"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//*[@name='order_line']" position="before">
+            <button class="pull-right" name="%(action_open_po_line_wizard)d" string="Add Order Line" type="action" attrs="{'invisible': [('state', 'not in', ('draft', 'sent'))]}"/>
+        </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="line_wizard_sp_button">
+      <field name="name">x_jos.stock.picking.form.line.wizard.mod</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//*[@name='move_lines']" position="before">
+               <button class="pull-right" name="%(action_open_sp_line_wizard)d" string="Add Line" type="action" attrs="{'invisible': [('state', 'not in', ('draft'))]}"/>
+       </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="lead_customer_type">
+      <field name="name">x_jos.crm.leads.form.mod</field>
+      <field name="model">crm.lead</field>
+      <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='partner_id']" position="after">
+          <field name="x_customer_type"/>
+        </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="dimensions_product_product_form">
+      <field name="name">x_jos.product.product.form.mod</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_normal_form_view"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='categ_id']" position="after">
+          <field name="x_dimension_w"/>
+          <field name="x_dimension_d"/>
+          <field name="x_dimension_h"/>
+          <field name="x_cubic_meters"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record model="ir.model" id="x_hold_reason_wizard">
+      <field name="info">Wizard to set hold reason.</field>
+      <field name="model">x_hold_reason_wizard</field>
+      <field name="name">Hold Reason</field>
+      <field name="state">manual</field>
+      <field name="transient" eval="True"/>
+    </record>
+    <record model="ir.model" id="x_carrier">
+      <field name="info">Carrier Model</field>
+      <field name="model">x_carrier</field>
+      <field name="name">Carriers</field>
+      <field name="state">manual</field>
+      <field name="transient" eval="False"/>
+    </record>
+    <record model="ir.model" id="model_line_wizard">
+      <field name="info">Order Line Selection Wizard</field>
+      <field name="model">x_line_wizard</field>
+      <field name="name">Order Line Selection Wizard</field>
+      <field name="state">manual</field>
+      <field name="transient" eval="False"/>
+    </record>
+    <record model="ir.model" id="model_line_wizard_line">
+      <field name="info">Order Line Selection Wizard Lines</field>
+      <field name="model">x_line_wizard_line</field>
+      <field name="name">Order Line Selection Wizard Lines</field>
+      <field name="state">manual</field>
+      <field name="transient" eval="False"/>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.model.access" id="access_model_hold_reason">
+      <field name="name">Global</field>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="model_id" ref="x_hold_reason_wizard"/>
+    </record>
+    <record model="ir.model.access" id="access_model_carrier">
+      <field name="name">Global</field>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="model_id" ref="x_carrier"/>
+    </record>
+    <record model="ir.model.access" id="access_model_line_wizard">
+      <field name="name">Global</field>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="model_id" ref="model_line_wizard"/>
+    </record>
+    <record model="ir.model.access" id="access_model_line_wizard_line">
+      <field name="name">Global</field>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="model_id" ref="model_line_wizard_line"/>
+    </record>
+  </data>
+</odoo>

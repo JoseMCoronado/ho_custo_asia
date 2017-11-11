@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.actions.server" id="action_transfer_so_notes">
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">[JOS] Transfer SO SC Notes on Confirmation</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+record.action_confirm()
+for picking in record.picking_ids:
+  picking['x_sc_notes'] = record.x_sc_notes
+  picking['x_sales_request'] = record.x_sales_request
+  picking['x_last_ship'] = record.x_last_ship
+  if record.x_hold == True or record.x_acc_hold == True:
+    picking['x_dns'] = True
+  picking['x_ship_date'] = record.requested_date
+  if not record.requested_date:
+    picking['scheduled_date'] = '2050-12-31 00:00:00'
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_transfer_po_notes">
+      <field name="model_id" ref="purchase.model_purchase_order"/>
+      <field name="name">[JOS] Transfer PO SC Notes on Confirmation</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+record.button_confirm()
+for picking in record.picking_ids:
+  picking['x_sc_notes'] = record.x_sc_notes
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_pre_sales_hold">
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">[JOS] Hold Sales Order - Sales Open Wizard</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+if record.x_hold != True:
+    action_data = env.ref('ho_custo_asia.hold_reason_wizard').read()[0]
+    action_data.update({'context': {'default_x_so_id': record.id}})
+    action = action_data
+else:
+    record['x_hold'] = False
+    if record.x_acc_hold != True:
+      for picking in record.picking_ids:
+        picking['x_dns'] = False
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_sales_hold">
+      <field name="model_id" ref="ho_custo_asia.x_hold_reason_wizard"/>
+      <field name="name">[JOS] Hold Sales Order - Sales Hold</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+record.x_so_id.write({'x_hold':True,'x_hold_reason': record.x_hold_reason})
+for picking in record.x_so_id.picking_ids:
+  picking['x_dns'] = True
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_acc_hold">
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">[JOS] Hold Sales Order - Accounting</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+if record.x_acc_hold != True:
+    record['x_acc_hold'] = True
+    for picking in record.picking_ids:
+      picking['x_dns'] = True
+else:
+    record['x_acc_hold'] = False
+    if record.x_hold != True:
+      for picking in record.picking_ids:
+        picking['x_dns'] = False
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_send_awaiting">
+      <field name="model_id" ref="sale.model_sale_order"/>
+      <field name="name">[JOS] Change x_state to awaiting</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+if record.incoterm and record.x_last_ship:
+      record['x_state'] = 'awaiting'
+      record['x_acc_hold'] = True
+      record['x_approval_date'] = datetime.datetime.now().strftime('%Y-%m-%d')
+else:
+      raise Warning("You need to select a 'Delivery Method' or 'Last Ship Date' before submitting for approval.")
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_add_so_lines">
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">[JOS] Add Sale Order Lines</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+vals = {}
+if record.x_product_qty <=0:
+     raise Warning("Configuration Warning !\n Quantity can not be zero or negative.")
+order  = env["sale.order"].browse(env.context.get("order_id"))
+if not order.name:
+     raise Warning("User Error !\nSomething went wrong. Please reload the interface and try again!")
+value_ids = [ att.x_product_attribute_value.id for att in record.x_product_attribute_ids]
+product = record.x_product_id.product_variant_ids.filtered(lambda record: all([i.id in value_ids for i in record.attribute_value_ids]))
+if not product:
+     raise Warning("Configuration Warning !\n\nPlease reconfigure attributes.\nNo matching variant found for product'{}' with attributes '{}'. ".format(record.x_product_id.name ,", ".join([ att.x_product_attribute_value.name_get()[0][1] for att in record.x_product_attribute_ids])))
+elif len(product) > 1:
+     product = product[0]
+
+product = product.with_context(
+            lang=order.partner_id.lang,
+            partner=order.partner_id.id,
+            quantity=record.x_product_qty,
+            date=order.date_order,
+            pricelist=order.pricelist_id.id,
+            uom= product.uom_id.id
+        )
+name = product.name_get()[0][1]
+if product.description_sale:
+    name += '\n' + product.description_sale
+vals = {
+    'name': name,
+    'product_id': product.id,
+    'product_uom' : product.uom_id.id,
+    'product_uom_qty': record.x_product_qty,
+    'price': product.price,
+    'order_id': order.id
+}
+orderline = env["sale.order.line"].create(vals)
+orderline._compute_tax_id()
+orderline['price_unit'] = env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, orderline.tax_id)
+action = {'type': 'ir.actions.act_window_close'}
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_add_po_lines">
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">[JOS] Add Purchase Order Lines</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+vals = {}
+if obj.x_product_qty <=0:
+     raise Warning("Configuration Warning !\n Quantity can not be zero or negative.")
+order  = env["purchase.order"].browse(env.context.get("order_id"))
+if not order.name:
+     raise Warning("User Error !\nSomething went wrong. Please reload the interface and try again!")
+value_ids = [ att.x_product_attribute_value.id for att in obj.x_product_attribute_ids]
+product = obj.x_product_id.product_variant_ids.filtered(lambda record: all([i.id in value_ids for i in record.attribute_value_ids]))
+if not product:
+     raise Warning("Configuration Warning !\n\nPlease reconfigure attributes.\nNo matching variant found for product'{}' with attributes '{}'. ".format(obj.x_product_id.name ,", ".join([ att.x_product_attribute_value.name_get()[0][1] for att in obj.x_product_attribute_ids])))
+elif len(product) > 1:
+     product = product[0]
+
+if product.product_tmpl_id.seller_ids:
+    chosenprice = product.product_tmpl_id.seller_ids[0].price
+else:
+    chosenprice = product.standard_price
+
+
+product = product.with_context(
+            lang=order.partner_id.lang,
+            partner=order.partner_id.id,
+            quantity=obj.x_product_qty,
+            date=order.date_order,
+            uom= product.uom_id.id
+        )
+if order.date_planned:
+    mindate = order.date_planned
+else:
+    mindate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+name = product.name_get()[0][1]
+if product.description_sale:
+    name += '\n' + product.description_sale
+vals = {
+    'name': name,
+    'product_id': product.id,
+    'product_uom' : product.uom_id.id,
+    'product_qty': obj.x_product_qty,
+    'price_unit': chosenprice,
+    'order_id': order.id,
+    'date_planned': mindate
+}
+orderline = env["purchase.order.line"].create(vals)
+
+orderline['price_unit'] = env['account.tax']._fix_tax_included_price(chosenprice, product.taxes_id, orderline.taxes_id)
+action = {'type': 'ir.actions.act_window_close'}
+        ]]>
+      </field>
+    </record>
+    <record model="ir.actions.server" id="action_add_sp_lines">
+      <field name="model_id" ref="ho_custo_asia.model_line_wizard"/>
+      <field name="name">[JOS] Add Transfer Lines</field>
+      <field name="sequence">5</field>
+      <field name="state">code</field>
+      <field name="code"><![CDATA[
+vals = {}
+if obj.x_product_qty <=0:
+     raise Warning("Configuration Warning !\n Quantity can not be zero or negative.")
+order  = env["stock.picking"].browse(env.context.get("picking_id"))
+if not order.name:
+     raise Warning("User Error !\nSomething went wrong. Please reload the interface and try again!")
+value_ids = [ att.x_product_attribute_value.id for att in obj.x_product_attribute_ids]
+product = obj.x_product_id.product_variant_ids.filtered(lambda record: all([i.id in value_ids for i in record.attribute_value_ids]))
+if not product:
+     raise Warning("Configuration Warning !\n\nPlease reconfigure attributes.\nNo matching variant found for product'{}' with attributes '{}'. ".format(obj.x_product_id.name ,", ".join([ att.x_product_attribute_value.name_get()[0][1] for att in obj.x_product_attribute_ids])))
+elif len(product) > 1:
+     product = product[0]
+
+product = product.with_context(
+            lang=order.partner_id.lang,
+            partner=order.partner_id.id,
+            #quantity=obj.x_product_qty,
+            #date=order.scheduled_date,
+            uom= product.uom_id.id
+        )
+name = product.name_get()[0][1]
+if product.description_sale:
+    name += '\n' + product.description_sale
+vals = {
+    'name': name,
+    'product_id': product.id,
+    'product_uom' : product.uom_id.id,
+    'product_uom_qty': obj.x_product_qty,
+    'picking_id': order.id,
+    'location_id': order.location_id.id,
+    'location_dest_id': order.location_dest_id.id,
+    'date_expected': order.date
+}
+orderline = env["stock.move"].create(vals)
+
+action = {'type': 'ir.actions.act_window_close'}
+        ]]>
+      </field>
+    </record>
+  </data>
+</odoo>

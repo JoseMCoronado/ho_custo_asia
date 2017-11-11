@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.actions.act_window" id="hold_reason_wizard">
+      <field name="name">Do Not Ship Reason</field>
+      <field name="res_model">x_hold_reason_wizard</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="limit">80</field>
+      <field name="target">new</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.x_hold_reason_form"/>
+      <field name="view_mode">form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_deliveres_pending">
+      <field name="name">Deliveries Pending Shipping</field>
+      <field name="res_model">stock.picking</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('state','not in',['done','cancel','draft']),('picking_type_id.code','=','outgoing')]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" eval="False"/>
+      <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_returns_pending">
+      <field name="name">Returns Pending Receipt</field>
+      <field name="res_model">stock.picking</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('state','not in',['done','cancel','draft']),('picking_type_id.code','=','incoming'),('location_id.usage','=','customer')]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" eval="False"/>
+      <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_downpayment_invoices">
+      <field name="name">Open Downpayment Invoices</field>
+      <field name="res_model">account.invoice</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('type','in',('out_invoice', 'out_refund')),('x_downpayment','=',True)]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="account.invoice_tree"/>
+      <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_held_sale_orders">
+      <field name="name">Sale Orders Not Cleared</field>
+      <field name="res_model">sale.order</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('state','not in',['done','cancel','draft']),'|',('x_hold','=',True),('x_acc_hold','=',True)]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="sale.view_order_tree"/>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_to_schedule_transfers">
+      <field name="name">To Schedule</field>
+      <field name="res_model">stock.picking</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('state','not in',['done','cancel','draft']),('x_ship_date','=',False),('x_dns','!=',True)]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.sp_to_schedule"/>
+      <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_not_shipped_open_balance">
+      <field name="name">Sale Orders not Shipped with Open Balances</field>
+      <field name="res_model">sale.order</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{'show_sale':True}</field>
+      <field name="domain">[('invoice_status','=','to invoice')]</field>
+      <field name="limit">80</field>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.so_not_shipped_open_balance"/>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="stock.stock_picking_type_action">
+      <field name="context">{'group_by':['warehouse_id']}</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_my_orders">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('user_id','=',uid),('state','in',['sale'])]</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">My Sale Orders</field>
+      <field name="res_model">sale.order</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_my_orders"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_my_completed_orders">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('user_id','=',uid),('state','in',['done']),('x_transfer_status','in',['completed']),('x_inv_pay_status','in',['pif'])]</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">My Completed Orders</field>
+      <field name="res_model">sale.order</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_my_completed_orders"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_my_awaiting_orders">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="domain">[('user_id','=',uid),('x_state','in',['awaiting'])]</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">My Orders Awaiting Approval</field>
+      <field name="res_model">sale.order</field>
+      <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_my_orders_awaiting"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_open_so_line_wizard">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{'order_id': active_id}</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">Add Sale Order Line</field>
+      <field name="res_model">x_line_wizard</field>
+      <field name="target">new</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_harbour_so_line_wizard"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_open_po_line_wizard">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{'order_id': active_id}</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">Add Purchase Order Line</field>
+      <field name="res_model">x_line_wizard</field>
+      <field name="target">new</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_harbour_po_line_wizard"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_open_sp_line_wizard">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{'picking_id': active_id}</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">Add Transfer Line</field>
+      <field name="res_model">x_line_wizard</field>
+      <field name="target">new</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="ho_custo_asia.view_harbour_sp_line_wizard"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">form</field>
+    </record>
+  </data>
+</odoo>

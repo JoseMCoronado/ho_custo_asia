@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.ui.menu" id="deliveries_pending_shipping">
+      <field ref="ho_custo_asia.action_deliveres_pending" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">Deliveries Pending Shipping</field>
+      <field ref="stock.menu_stock_warehouse_mgmt" name="parent_id"/>
+      <field name="sequence">10</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="returns_pending_shipping">
+      <field ref="ho_custo_asia.action_returns_pending" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">Returns Pending Receipt</field>
+      <field ref="stock.menu_stock_warehouse_mgmt" name="parent_id"/>
+      <field name="sequence">11</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="downpayment_invoices">
+      <field ref="ho_custo_asia.action_downpayment_invoices" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">Open Downpayment Invoices</field>
+      <field ref="account.menu_finance_receivables" name="parent_id"/>
+      <field name="sequence">10</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="not_cleared_sos">
+      <field ref="ho_custo_asia.action_held_sale_orders" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">Sale Orders Not Cleared</field>
+      <field ref="sale.sale_order_menu" name="parent_id"/>
+      <field name="sequence">10</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="to_schedule_pickings">
+      <field ref="ho_custo_asia.action_to_schedule_transfers" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">To Schedule</field>
+      <field ref="stock.menu_stock_root" name="parent_id"/>
+      <field name="sequence">0</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_order_notshipped_openbalance">
+      <field ref="ho_custo_asia.action_not_shipped_open_balance" name="action"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">Orders Not Shipped with Open Balances</field>
+      <field ref="sale.menu_sale_invoicing" name="parent_id"/>
+      <field name="sequence">0</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="stock.menu_stock_warehouse_mgmt">
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_my_sales">
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">My Sales</field>
+      <field name="parent_id" ref="sale.sale_menu_root"/>
+      <field name="sequence">4</field>
+    </record>
+    <record model="ir.ui.menu" id="menu_my_orders">
+      <field name="action" ref="ho_custo_asia.action_window_my_orders"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">My Sale Orders</field>
+      <field name="parent_id" ref="ho_custo_asia.menu_my_sales"/>
+      <field name="sequence">10</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_my_completed_orders">
+      <field name="action" ref="ho_custo_asia.action_window_my_completed_orders"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">My Completed Orders</field>
+      <field name="parent_id" ref="ho_custo_asia.menu_my_sales"/>
+      <field name="sequence">20</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_my_awaiting_orders">
+      <field name="action" ref="ho_custo_asia.action_window_my_awaiting_orders"/>
+      <field name="active" eval="True"/>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="name">My Orders Awaiting Approval</field>
+      <field name="parent_id" ref="ho_custo_asia.menu_my_sales"/>
+      <field name="sequence">30</field>
+      <field name="web_icon" eval="False"/>
+    </record>
+  </data>
+</odoo>
